@@ -43,12 +43,10 @@ class MeshExample(object):
     def create_cells(self, num_cells):
 
         cell_cnt = 0
-        for x in xrange(0,num_cells-1):
-            self.editor.add_cell(cell_cnt,x, x+1)
+        for x in xrange(num_cells):
+            self.editor.add_cell(cell_cnt,x, x)
             cell_cnt += 1
 
-        # cyclically connect the last vertex with the first one
-        self.editor.add_cell(cell_cnt, num_cells - 1, 0)
 
     def close(self):
         self.editor.close()
