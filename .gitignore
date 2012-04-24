@@ -7,3 +7,5 @@
 **/*.xml
 *.xml
 **/*.xml
+*.bin
+**/*.bin
