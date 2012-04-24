@@ -27,18 +27,18 @@ class MeshExample(object):
 
     def initializing_empty_grid(self, num_vertices, num_segments):
 
+        self.num_vertices = num_vertices
         self.editor.init_vertices(num_vertices)
         self.editor.init_cells(num_segments) # initializing the segments
 
-    def create_vertices(self, x_cnt, y_cnt, z_cnt):
-
-        vertex_count = 0
-        for z in xrange(0,z_cnt):
-            for y in xrange(0,y_cnt):
-                for x in xrange(0, x_cnt):
-                        self.editor.add_vertex(vertex_count, x, y, z)
-                        vertex_count += 1
-        self.num_vertices = vertex_count
+    def create_vertices(self, coords):
+        """
+        coords is a 3 dimensional array
+        """
+        i=0
+        for x in coords:
+            self.editor.add_vertex(i, x[0],x[1],x[2])
+            i +=1
 
     def create_cells(self, num_cells):
 
@@ -49,4 +49,7 @@ class MeshExample(object):
 
         # cyclically connect the last vertex with the first one
         self.editor.add_cell(cell_cnt, num_cells - 1, 0)
+
+    def close(self):
+        self.editor.close()
 

@@ -13,13 +13,13 @@ from mesh_class_example import MeshExample
 mesh_example = MeshExample(1,3) # topo_dim = 1, geom_dim = 3
 
 num_vertices = 750
-num_segments = 1
+num_cells = 1
 
-mesh_example.initializing_empty_grid(num_vertices, num_segments)
+mesh_example.initializing_empty_grid(num_vertices, num_cells)
 mesh_example.create_vertices(10,15,5)
 
 # make the cells
-mesh_example.create_cells(num_segments)
+mesh_example.create_cells(num_cells)
 
 fx=File('test_data/outmesh_topo1.xml')
 fx << mesh_example.mesh
