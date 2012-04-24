@@ -19,13 +19,13 @@ mesh_example.initializing_empty_grid(num_vertices, num_segments)
 mesh_example.create_vertices(10,15,5)
 
 # make the cells
-mesh_example.create_cells(num_vertices)
+mesh_example.create_cells(num_segments)
 
 fx=File('test_data/outmesh_topo1.xml')
 fx << mesh_example.mesh
 
-fr = File('test_data/outmesh.raw')
-fr << mesh_example.mesh
+#fr = File('test_data/outmesh.raw')
+#fr << mesh_example.mesh
 
 
 # TODO: Repeat for other meshes (i.e. (lon_u, lat_u, s_rho), etc)

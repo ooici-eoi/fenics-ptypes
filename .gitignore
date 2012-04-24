@@ -1,2 +1,9 @@
 *.pyc
 .idea
+# Data files
+*.cdl
+**/*.cdl
+*.raw
+**/*.xml
+*.xml
+**/*.xml
