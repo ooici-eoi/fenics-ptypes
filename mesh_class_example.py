@@ -27,7 +27,6 @@ class MeshExample(object):
 
     def initializing_empty_grid(self, num_vertices, num_segments):
 
-        self.num_vertices = num_vertices
         self.editor.init_vertices(num_vertices)
         self.editor.init_cells(num_segments) # initializing the segments
 
@@ -45,6 +44,24 @@ class MeshExample(object):
         cell_cnt = 0
         for x in xrange(num_cells):
             self.editor.add_cell(cell_cnt,x, x)
+            cell_cnt += 1
+
+    def create_time_vertices(self, time_array):
+        '''
+        Create time vertices from the provided array of times
+        '''
+        i=0
+        for x in time_array:
+            self.editor.add_vertex(i, float(x)) # seems that fenics does not like numpy.float but likes python float
+            i +=1
+
+    def create_time_cells(self, num_of_time_cells):
+        '''
+        Create time cells connecting successive time vertices from the first to the last one
+        '''
+        cell_cnt = 0
+        for x in xrange(num_of_time_cells-1):
+            self.editor.add_cell(cell_cnt,x, x+1)
             cell_cnt += 1
 
 
