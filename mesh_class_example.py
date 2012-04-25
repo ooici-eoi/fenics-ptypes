@@ -1,6 +1,54 @@
 
 from dolfin import *
-from test_mesh_roms import get_coord_array, create_mesh
+import numpy as np
+
+def get_coord_array(ds,  lon_axis="", lat_axis="", z_axis=None):
+    x_coords=ds.variables[lon_axis][:]
+    x_shp=x_coords.shape
+    x_coords=x_coords.flatten()
+    y_coords=ds.variables[lat_axis][:]
+    y_shp=y_coords.shape
+    y_coords=y_coords.flatten()
+
+    x_cnt=x_shp[0]
+    y_cnt=x_shp[1]
+
+    if z_axis:
+        z_coords=ds.variables[z_axis][:]
+    else:
+        z_coords=np.array([0])
+
+    z_cnt=len(z_coords)
+    zcol=np.empty([len(x_coords)])
+    zcol.fill(z_coords[0])
+    coords=np.column_stack([x_coords,y_coords,zcol])
+    for z in xrange(z_cnt-1):
+        zcol=np.empty([len(x_coords)])
+        zcol.fill(z_coords[z+1])
+        coords=np.vstack([coords,np.column_stack([x_coords,y_coords,zcol])])
+
+    return coords, (x_cnt,y_cnt,z_cnt)
+
+def create_mesh(ds, outfile, topo_dim, geom_dim, x_coord, y_coord, z_coord):
+
+    rho_coords, rho_shape = get_coord_array(ds, x_coord, y_coord, z_coord)
+
+    print rho_shape
+    print len(rho_coords)
+
+    mesh_example = MeshExample(topo_dim,geom_dim) # topo_dim = 1, geom_dim = 3
+    num_vertices = len(rho_coords)
+    num_cells = num_vertices
+
+    mesh_example.initializing_empty_grid(num_vertices, num_cells)
+    mesh_example.create_vertices(rho_coords)
+    mesh_example.create_cells(num_cells)
+    mesh_example.close()
+
+    fx=File(outfile)
+    fx << mesh_example.mesh
+
+    return mesh_example.mesh
 
 class MeshExample(object):
     """
@@ -111,16 +159,15 @@ class Parameter(object):
     Connect a variable to a time vertex
     '''
 
-    def __init__(self, parameter_name, time_vertex_index, mesh_topo):
+    def __init__(self, parameter_name, time_vertex_index, coord_axes):
         self.name = parameter_name
         self.time_vertex_index = time_vertex_index
-        self.time_mesh = mesh_topo.time_mesh
-        self.mesh_topo = mesh_topo
+        self.time_mesh = coord_axes.time_mesh
+        self.mesh_topo = coord_axes.mesh_topo
 
         self.create_variable()
 
     def create_variable(self):
-        self.filename = self.make_meshfunction_filename(self.name, self.time_vertex_index)
         self.parameter_handle = MeshFunction("double", self.mesh_topo, 0)
         return self.parameter_handle
 
@@ -128,7 +175,8 @@ class Parameter(object):
         '''
         Store values for that variable from a dataset
         '''
-        self.parameter_handle.array()[:] = ds.variables[self.name][0,:,:,:].flatten()
+        self.values = ds.variables[self.name][0,:,:,:].flatten()
+        self.parameter_handle.array()[:] = self.values
 
     def make_meshfunction_filename(self):
         '''
@@ -138,14 +186,14 @@ class Parameter(object):
         return name
 
     def write_to_disk(self):
-        temp_outfile = File('test_data/' + self.filename + '.xml')
+        temp_outfile = File('test_data/' + self.make_meshfunction_filename() + '.xml')
         temp_outfile << self.parameter_handle
 
 class MeshCoordinateAxes(object):
     '''
     Connects a coordinate system with a time domain
     '''
-    def __init__(self, name, time_domain, time_mesh):
+    def __init__(self, name, time_domain, time_mesh, ds):
         self.name = name
         self.time_domain = time_domain
         self.time_mesh = time_mesh
@@ -167,15 +215,16 @@ class MeshCoordinateAxes(object):
             self.y_coord = 'lat_rho'
             self.z_coord = 's_w'
 
-    def create_mesh_topo(self):
+        self.mesh_topo = self.create_mesh_topo(ds)
+
+    def create_mesh_topo(self, ds):
 
         # invoking the function below creates a mesh and writes it to a disk also
-        mesh_topo = create_mesh('test_data/' + self.make_topo_filename() + '.xml',
+        mesh_topo = create_mesh(ds, 'test_data/' + self.make_topo_filename() + '.xml',
                                     topo_dim = 1, geom_dim = 3, 
                                     x_coord = self.x_coord, 
                                     y_coord = self.y_coord, 
                                     z_coord = self.z_coord)
-
         return mesh_topo
 
     def make_topo_filename(self):

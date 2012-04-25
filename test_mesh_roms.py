@@ -99,35 +99,55 @@ subdomain_func_1.set_all(0)
 time_domain_1.mark(subdomain_func_1, time_domain_1.unique_value)
 
 #------------------------------------------------------------------------------------------------
-# Write the meshes
+# Creating the MeshCoordinateAxes objects that contain the topo meshes and information about
+# which time domains they are for
 #------------------------------------------------------------------------------------------------
 
 # For mesh (lon_rho, lat_rho, s_rho)
-mesh_topo_1 = MeshCoordinateAxes( name = 'mesh_topo_1', time_domain = time_domain_0, time_mesh = time_mesh)
+coord_axes_1 = MeshCoordinateAxes(  name = 'mesh_topo_1',
+                                    time_domain = time_domain_0,
+                                    time_mesh = time_mesh,
+                                    ds = ds)
+mesh_topo_1 = coord_axes_1.mesh_topo
 
 # For mesh (lon_u, lat_u, s_rho)
-mesh_topo_2 = MeshCoordinateAxes(name = 'mesh_topo_2', time_domain = time_domain_0, time_mesh = time_mesh)
+coord_axes_2 = MeshCoordinateAxes(  name = 'mesh_topo_2',
+                                    time_domain = time_domain_0,
+                                    time_mesh = time_mesh,
+                                    ds = ds)
+mesh_topo_2 = coord_axes_2.mesh_topo
 
 # For mesh (lon_u, lat_u, s_rho)
-mesh_topo_3 = MeshCoordinateAxes(name = 'mesh_topo_3', time_domain = time_domain_0, time_mesh = time_mesh)
+coord_axes_3 = MeshCoordinateAxes(  name = 'mesh_topo_3',
+                                    time_domain = time_domain_0,
+                                    time_mesh = time_mesh,
+                                    ds = ds)
+mesh_topo_3 = coord_axes_3.mesh_topo
 
 # For mesh (lon_u, lat_u, s_rho)
-mesh_topo_4 = MeshCoordinateAxes(name = 'mesh_topo_4', time_domain = time_domain_0, time_mesh = time_mesh)
+coord_axes_4 = MeshCoordinateAxes(  name = 'mesh_topo_4',
+                                    time_domain = time_domain_0,
+                                    time_mesh = time_mesh,
+                                    ds = ds)
+mesh_topo_4 = coord_axes_4.mesh_topo
 
 #------------------------------------------------------------------------------------------------
-# Initialize Mesh Functions
+# Creating Parameter objects which create appropriate mesh functions and connect them with their
+# corresponding time vertices and mesh topologies
 #------------------------------------------------------------------------------------------------
 
-time_vertex_index = 1
-
-temp = Parameter(parameter_name='temp', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_1)
-salt = Parameter(parameter_name='salt', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_1)
-u = Parameter(parameter_name='u', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_2)
-v = Parameter(parameter_name='v', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_3)
-w = Parameter(parameter_name='w', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_4)
+temp = Parameter(parameter_name='temp', time_vertex_index= 1, coord_axes=coord_axes_1)
+salt = Parameter(parameter_name='salt', time_vertex_index= 1, coord_axes=coord_axes_1)
+u = Parameter(parameter_name='u', time_vertex_index= 1, coord_axes=coord_axes_2)
+v = Parameter(parameter_name='v', time_vertex_index= 1, coord_axes=coord_axes_3)
+w = Parameter(parameter_name='w', time_vertex_index= 1, coord_axes=coord_axes_4)
 
 #------------------------------------------------------------------------------------------------
-# Put values into Mesh Functions
+# Transfer values from a netCDF dataset to the Parameter objects...
+# After transferring, we can access the data transferred using either values attribute of
+# the Parameter object: Parameter.values --> returns a masked array....
+# or from the meshfunction handle of the Parameter object:
+# Parameter.parameter_handle.array() --> returns a numpy array
 #------------------------------------------------------------------------------------------------
 
 # temp values
