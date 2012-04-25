@@ -117,6 +117,8 @@ class Variable(object):
         self.time_mesh = mesh_topo.time_mesh
         self.mesh_topo = mesh_topo
 
+        self.create_variable()
+
     def create_variable(self):
         self.filename = self.make_meshfunction_filename(self.name, self.time_vertex_index)
         self.variable_handle = MeshFunction("double", self.mesh_topo, 0)
