@@ -6,7 +6,7 @@ from dolfin import *
 from pylab import *
 import numpy as np
 import numpy.ma as ma
-from mesh_class_example import MeshExample
+from mesh_class_example import MeshExample, TimeMesh, TimeDomain
 
 def get_coord_array(lon_axis="", lat_axis="", z_axis=None):
     x_coords=ds.variables[lon_axis][:]
@@ -124,10 +124,10 @@ w.array()[:]  = ds.variables['w'][0,:,:,:].flatten()
 # Creating TIME: Creating a topo dim 1 and geom dim 1 mesh for time
 #------------------------------------------------------------------------------------------------
 
-time_mesh = MeshExample(1,1)
+time_mesh = TimeMesh()
 
 # for now we look at only one spatial point
-time_array = ds.variables['temp'][:,0,0,0].flatten()
+time_array = ds.variables['ocean_time'][:].flatten()
 
 num_of_time_vertices = len(time_array)
 
@@ -137,3 +137,54 @@ time_mesh.create_time_cells(num_of_time_cells=num_of_time_vertices)
 
 time_out = File("test_data/time_mesh1.xml")
 time_out << time_mesh.mesh
+
+
+#------------------------------------------------------------------------------------------------
+# Connecting the time mesh to the topo mesh
+#------------------------------------------------------------------------------------------------
+
+def make_topo_name(topo_coordinate_name, subdomain_value):
+    '''
+    Construct a name for the topological coordinate axes
+    '''
+    name = topo_coordinate_name + '_' + subdomain_value
+    return name
+
+
+
+#------------------------------------------------------------------------------------------------
+# Connecting the time mesh to the mesh functions for variables (temp, sal etc)
+#------------------------------------------------------------------------------------------------
+
+def make_meshfunction_name(meshfunction_name, subdomain_value):
+    '''
+    Construct a name for the topological coordinate axes
+    '''
+    name = meshfunction_name + '_' + subdomain_value
+    return name
+
+
+#------------------------------------------------------------------------------------------------
+# Creating subdomains on the time mesh by marking them using meshfunctions
+#------------------------------------------------------------------------------------------------
+
+
+# Mark a subdomain on the time mesh with a value
+
+condition = {'lower_bound' : 0, 'upper_bound' : 10**9}
+time_domain_0 = TimeDomain(time_mesh, condition)
+subdomain_func_0 = MeshFunction("uint", time_mesh.mesh, 0)
+subdomain_func_0.set_all(0)
+time_domain_0.mark(subdomain_func_0, time_domain_0.unique_value)
+
+# Mark another subdomain on the time mesh with a value
+
+condition = {'lower_bound' : 2, 'upper_bound' : 1.95220800*(10**8) }
+time_domain_1 = TimeDomain(time_mesh, condition)
+subdomain_func_1 = MeshFunction("uint", time_mesh.mesh, 0)
+subdomain_func_1.set_all(0)
+time_domain_1.mark(subdomain_func_1, time_domain_1.unique_value)
+
+
+
+
