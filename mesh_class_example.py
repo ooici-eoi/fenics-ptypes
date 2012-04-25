@@ -139,7 +139,7 @@ class Variable(object):
         temp_outfile = File('test_data/' + self.filename + '.xml')
         temp_outfile << self.variable_handle
 
-def MeshCoordinateAxes(object):
+class MeshCoordinateAxes(object):
     '''
     Connects a coordinate system with a time domain
     '''

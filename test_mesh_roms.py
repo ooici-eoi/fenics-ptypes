@@ -5,7 +5,7 @@ from netCDF4 import Dataset
 from dolfin import *
 from pylab import *
 import numpy as np
-from mesh_class_example import MeshExample, TimeMesh, TimeDomain
+from mesh_class_example import MeshExample, TimeMesh, TimeDomain, Variable, MeshCoordinateAxes
 
 def get_coord_array(lon_axis="", lat_axis="", z_axis=None):
     x_coords=ds.variables[lon_axis][:]
@@ -78,36 +78,9 @@ time_mesh.create_time_cells(num_of_time_cells=num_of_time_vertices)
 time_out = File("test_data/time_mesh1.xml")
 time_out << time_mesh.mesh
 
-
-#------------------------------------------------------------------------------------------------
-# Connecting the time mesh to the topo mesh
-#------------------------------------------------------------------------------------------------
-
-def make_topo_name(topo_coordinate_name, timedomain_unique_value):
-    '''
-    Construct a name for the topological coordinate axes
-    '''
-    name = topo_coordinate_name + '_' + str(timedomain_unique_value)
-    return name
-
-
-
-#------------------------------------------------------------------------------------------------
-# Connecting the time mesh to the mesh functions for variables (temp, sal etc)
-#------------------------------------------------------------------------------------------------
-
-def make_meshfunction_name(variable_name, time_vertex_index):
-    '''
-    Construct a name for the topological coordinate axes
-    '''
-    name = variable_name + '_' + str(time_vertex_index)
-    return name
-
-
 #------------------------------------------------------------------------------------------------
 # Creating subdomains on the time mesh by marking them using meshfunctions
 #------------------------------------------------------------------------------------------------
-
 
 # Mark a subdomain on the time mesh with a value
 
@@ -125,92 +98,58 @@ subdomain_func_1 = MeshFunction("uint", time_mesh.mesh, 0)
 subdomain_func_1.set_all(0)
 time_domain_1.mark(subdomain_func_1, time_domain_1.unique_value)
 
-
-#------------------------------------------------------------------------------------------------
-# Connecting coordinate-axes-topologies with the time mesh
-#------------------------------------------------------------------------------------------------
-
-mesh_filename_1 = make_topo_name(topo_coordinate_name = 'mesh_topo_1', timedomain_unique_value = time_domain_0.unique_value)
-mesh_filename_2 = make_topo_name(topo_coordinate_name = 'mesh_topo_2', timedomain_unique_value = time_domain_1.unique_value)
-mesh_filename_3 = make_topo_name(topo_coordinate_name = 'mesh_topo_3', timedomain_unique_value = time_domain_0.unique_value)
-mesh_filename_4 = make_topo_name(topo_coordinate_name = 'mesh_topo_4', timedomain_unique_value = time_domain_1.unique_value)
-
-#------------------------------------------------------------------------------------------------
-# Connecting variables with the time mesh
-#------------------------------------------------------------------------------------------------
-
-temp_filename = make_meshfunction_name(variable_name = 'temp', time_vertex_index = 1)
-salt_filename = make_meshfunction_name(variable_name = 'salt', time_vertex_index = 1)
-u_filename = make_meshfunction_name(variable_name = 'u', time_vertex_index = 1)
-v_filename = make_meshfunction_name(variable_name = 'v', time_vertex_index = 1)
-w_filename = make_meshfunction_name(variable_name = 'w', time_vertex_index = 1)
-
 #------------------------------------------------------------------------------------------------
 # Write the meshes
 #------------------------------------------------------------------------------------------------
 
 # For mesh (lon_rho, lat_rho, s_rho)
-mesh_topo_1 = create_mesh('test_data/' + mesh_filename_1 + '.xml', topo_dim = 1, geom_dim = 3, x_coord = 'lon_rho', y_coord = 'lat_rho', z_coord = 's_rho')
-
-# TODO: Repeat for other meshes (i.e. (lon_u, lat_u, s_rho), etc)
+mesh_topo_1 = MeshCoordinateAxes( name = 'mesh_topo_1', time_domain = time_domain_0, time_mesh = time_mesh)
 
 # For mesh (lon_u, lat_u, s_rho)
-mesh_topo_2 = create_mesh('test_data/' + mesh_filename_2 + '.xml', topo_dim = 1, geom_dim = 3, x_coord = 'lon_u', y_coord = 'lat_u', z_coord = 's_rho')
+mesh_topo_2 = MeshCoordinateAxes(name = 'mesh_topo_2', time_domain = time_domain_0, time_mesh = time_mesh)
 
 # For mesh (lon_u, lat_u, s_rho)
-mesh_topo_3 = create_mesh('test_data/' + mesh_filename_3 + '.xml', topo_dim = 1, geom_dim = 3, x_coord = 'lon_v', y_coord = 'lat_v', z_coord = 's_rho')
+mesh_topo_3 = MeshCoordinateAxes(name = 'mesh_topo_3', time_domain = time_domain_0, time_mesh = time_mesh)
 
 # For mesh (lon_u, lat_u, s_rho)
-mesh_topo_4 = create_mesh('test_data/' + mesh_filename_4 + '.xml', topo_dim = 1, geom_dim = 3, x_coord = 'lon_rho', y_coord = 'lat_rho', z_coord = 's_w')
+mesh_topo_4 = MeshCoordinateAxes(name = 'mesh_topo_4', time_domain = time_domain_0, time_mesh = time_mesh)
 
 #------------------------------------------------------------------------------------------------
 # Initialize Mesh Functions
 #------------------------------------------------------------------------------------------------
 
-temp = MeshFunction("double", mesh_topo_1, 0)
-salt = MeshFunction("double", mesh_topo_1, 0)
-u = MeshFunction("double", mesh_topo_2, 0)
-v = MeshFunction("double", mesh_topo_3, 0)
-w = MeshFunction("double", mesh_topo_4, 0)
+time_vertex_index = 1
+
+temp = Variable(variable_name='temp', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_1)
+salt = Variable(variable_name='salt', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_1)
+u = Variable(variable_name='u', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_2)
+v = Variable(variable_name='v', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_3)
+w = Variable(variable_name='w', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_4)
 
 #------------------------------------------------------------------------------------------------
 # Put values into Mesh Functions
 #------------------------------------------------------------------------------------------------
 
 # temp values
-temp.array()[:] = ds.variables['temp'][0,:,:,:].flatten()
-
+temp.store_values(ds)
 # salt values
-salt.array()[:] = ds.variables['salt'][0,:,:,:].flatten() # the key for salinity is salt?
-
+salt.store_values(ds)
 # u values
-u.array()[:]  = ds.variables['u'][0,:,:,:].flatten()
-
+u.store_values(ds)
 # v values
-v.array()[:]  = ds.variables['v'][0,:,:,:].flatten()
-
+v.store_values(ds)
 # w values
-w.array()[:]  = ds.variables['w'][0,:,:,:].flatten()
+w.store_values(ds)
 
 #------------------------------------------------------------------------------------------------
 # Saving Mesh Functions to disk
 #------------------------------------------------------------------------------------------------
 
-temp_outfile = File('test_data/' + temp_filename + '.xml')
-temp_outfile << temp
-
-salt_outfile = File('test_data/' + salt_filename + '.xml')
-salt_outfile << salt
-
-u_outfile = File('test_data/' + u_filename + '.xml')
-u_outfile << u
-
-v_outfile = File('test_data/' + v_filename + '.xml')
-v_outfile << v
-
-w_outfile = File('test_data/' + w_filename + '.xml')
-w_outfile << w
-
+temp.write_to_disk()
+salt.write_to_disk()
+u.write_to_disk()
+v.write_to_disk()
+w.write_to_disk()
 
 
 
