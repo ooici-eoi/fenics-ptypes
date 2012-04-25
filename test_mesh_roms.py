@@ -5,7 +5,7 @@ from netCDF4 import Dataset
 from dolfin import *
 from pylab import *
 import numpy as np
-from mesh_class_example import MeshExample, TimeMesh, TimeDomain, Variable, MeshCoordinateAxes
+from mesh_class_example import MeshExample, TimeMesh, TimeDomain, Parameter, MeshCoordinateAxes
 
 def get_coord_array(lon_axis="", lat_axis="", z_axis=None):
     x_coords=ds.variables[lon_axis][:]
@@ -120,11 +120,11 @@ mesh_topo_4 = MeshCoordinateAxes(name = 'mesh_topo_4', time_domain = time_domain
 
 time_vertex_index = 1
 
-temp = Variable(variable_name='temp', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_1)
-salt = Variable(variable_name='salt', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_1)
-u = Variable(variable_name='u', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_2)
-v = Variable(variable_name='v', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_3)
-w = Variable(variable_name='w', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_4)
+temp = Parameter(parameter_name='temp', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_1)
+salt = Parameter(parameter_name='salt', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_1)
+u = Parameter(parameter_name='u', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_2)
+v = Parameter(parameter_name='v', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_3)
+w = Parameter(parameter_name='w', time_vertex_index= time_vertex_index, mesh_topo=mesh_topo_4)
 
 #------------------------------------------------------------------------------------------------
 # Put values into Mesh Functions

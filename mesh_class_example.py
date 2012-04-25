@@ -106,13 +106,13 @@ class TimeDomain(SubDomain):
         return True if self.lower_bound <= x[0] and  x[0] <= self.upper_bound else False
 
 
-class Variable(object):
+class Parameter(object):
     '''
     Connect a variable to a time vertex
     '''
 
-    def __init__(self, variable_name, time_vertex_index, mesh_topo):
-        self.name = variable_name
+    def __init__(self, parameter_name, time_vertex_index, mesh_topo):
+        self.name = parameter_name
         self.time_vertex_index = time_vertex_index
         self.time_mesh = mesh_topo.time_mesh
         self.mesh_topo = mesh_topo
@@ -121,14 +121,14 @@ class Variable(object):
 
     def create_variable(self):
         self.filename = self.make_meshfunction_filename(self.name, self.time_vertex_index)
-        self.variable_handle = MeshFunction("double", self.mesh_topo, 0)
-        return self.variable_handle
+        self.parameter_handle = MeshFunction("double", self.mesh_topo, 0)
+        return self.parameter_handle
 
     def store_values(self, ds):
         '''
         Store values for that variable from a dataset
         '''
-        self.variable_handle.array()[:] = ds.variables[self.name][0,:,:,:].flatten()
+        self.parameter_handle.array()[:] = ds.variables[self.name][0,:,:,:].flatten()
 
     def make_meshfunction_filename(self):
         '''
@@ -139,7 +139,7 @@ class Variable(object):
 
     def write_to_disk(self):
         temp_outfile = File('test_data/' + self.filename + '.xml')
-        temp_outfile << self.variable_handle
+        temp_outfile << self.parameter_handle
 
 class MeshCoordinateAxes(object):
     '''
