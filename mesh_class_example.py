@@ -168,7 +168,7 @@ def MeshCoordinateAxes(object):
     def create_mesh_topo(self):
 
         # invoking the function below creates a mesh and writes it to a disk also
-        mesh_topo = create_mesh('test_data/' + make_topo_filename() + '.xml',
+        mesh_topo = create_mesh('test_data/' + self.make_topo_filename() + '.xml',
                                     topo_dim = 1, geom_dim = 3, 
                                     x_coord = self.x_coord, 
                                     y_coord = self.y_coord, 
