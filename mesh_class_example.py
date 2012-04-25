@@ -103,3 +103,23 @@ class TimeDomain(SubDomain):
 
     def inside(self, x, on_boundary):
         return True if self.lower_bound <= x[0] and  x[0] <= self.upper_bound else False
+
+
+class Variable(object):
+    '''
+    Connect a variable to a time vertex
+    '''
+
+    def __init__(self, variable_name, time_vertex, time_mesh):
+        self.name = variable_name
+        self.time_vertex = time_vertex
+        self.time_mesh = time_mesh
+
+def MeshCoordinateAxes(object):
+    '''
+    Connects a coordinate system with a time domain
+    '''
+    def __init__(self, name, time_domain):
+        self.name = name
+        self.time_domain = time_domain
+
