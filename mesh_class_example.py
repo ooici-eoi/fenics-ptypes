@@ -52,21 +52,7 @@ def create_mesh(ds, outfile, topo_dim, geom_dim, x_coord, y_coord, z_coord):
 
 class MeshExample(object):
     """
-    A mesh with m x n vertices in a 2d grid, connected by segments. The vertices
-    are ordered from 0 to (m * n -1). The edges are also ordered:
-
-    Ex: For m = 4, n = 3, the meshes are ordered as:
-
-     0 1 2 3
-     4 5 6 7
-     8 9 10 11
-
-    The edges are ordered as
-
-    * 0 * 1 * 2 *
-    3   4   5   6
-    * 7 * 8 * 9 *
-
+    A mesh with m x n vertices in a 2d grid, connected by segments.
     """
     def __init__(self, topo_dim, geom_dim):
 
