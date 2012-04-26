@@ -109,7 +109,7 @@ class TimeMesh(object):
         self.editor = MeshEditor()
         self.editor.open(self.mesh, 1, 1) # topo_dim = 1, geom_dim = 1
 
-        self.last_unique_subdomain_value = 0
+        self.last_unique_subdomain_value = 1
 
     def initializing_empty_grid(self, num_vertices, num_segments):
 
@@ -159,9 +159,9 @@ class Parameter(object):
     Connect a variable to a time vertex
     '''
 
-    def __init__(self, parameter_name, time_vertex_index, coord_axes):
+    def __init__(self, parameter_name, time_array, coord_axes):
         self.name = parameter_name
-        self.time_vertex_index = time_vertex_index
+        self.time_array = time_array
         self.time_mesh = coord_axes.time_mesh
         self.mesh_topo = coord_axes.mesh_topo
 
@@ -182,7 +182,7 @@ class Parameter(object):
         '''
         Construct a name for the topological coordinate axes
         '''
-        name = self.name + '_' + str(self.time_vertex_index)
+        name = self.name
         return name
 
     def write_to_disk(self):

@@ -75,7 +75,7 @@ time_mesh.initializing_empty_grid(num_vertices=num_of_time_vertices, num_segment
 time_mesh.create_time_vertices(time_array)
 time_mesh.create_time_cells(num_of_time_cells=num_of_time_vertices)
 
-time_out = File("test_data/time_mesh1.xml")
+time_out = File("test_data/time_mesh.xml")
 time_out << time_mesh.mesh
 
 #------------------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ subdomain_func_1.set_all(0)
 time_domain_1.mark(subdomain_func_1, time_domain_1.unique_value)
 
 #------------------------------------------------------------------------------------------------
-# Creating the MeshCoordinateAxes objects that contain the topo meshes and information about
+# Create the MeshCoordinateAxes objects that contain the topo meshes and information about
 # which time domains they are for
 #------------------------------------------------------------------------------------------------
 
@@ -132,15 +132,26 @@ coord_axes_4 = MeshCoordinateAxes(  name = 'mesh_topo_4',
 mesh_topo_4 = coord_axes_4.mesh_topo
 
 #------------------------------------------------------------------------------------------------
-# Creating Parameter objects which create appropriate mesh functions and connect them with their
+# Create Parameter objects which create appropriate mesh functions and connect them with their
 # corresponding time vertices and mesh topologies
 #------------------------------------------------------------------------------------------------
 
-temp = Parameter(parameter_name='temp', time_vertex_index= 1, coord_axes=coord_axes_1)
-salt = Parameter(parameter_name='salt', time_vertex_index= 1, coord_axes=coord_axes_1)
-u = Parameter(parameter_name='u', time_vertex_index= 1, coord_axes=coord_axes_2)
-v = Parameter(parameter_name='v', time_vertex_index= 1, coord_axes=coord_axes_3)
-w = Parameter(parameter_name='w', time_vertex_index= 1, coord_axes=coord_axes_4)
+#temp = Parameter(parameter_name='temp', time_vertex_index= 1, coord_axes=coord_axes_1)
+#salt = Parameter(parameter_name='salt', time_vertex_index= 1, coord_axes=coord_axes_1)
+#u = Parameter(parameter_name='u', time_vertex_index= 1, coord_axes=coord_axes_2)
+#v = Parameter(parameter_name='v', time_vertex_index= 1, coord_axes=coord_axes_3)
+#w = Parameter(parameter_name='w', time_vertex_index= 1, coord_axes=coord_axes_4)
+
+
+# A parameter is defined over a mesh (a coordinate_axes mesh such as (lon_rho,lat_rho,s_rho))
+# and a sequence of times (this is provided by the time_mesh)
+
+temp = Parameter(parameter_name='temp', time_array = time_array, coord_axes=coord_axes_1)
+salt = Parameter(parameter_name='salt', time_array = time_array, coord_axes=coord_axes_1)
+u = Parameter(parameter_name='u', time_array = time_array, coord_axes=coord_axes_2)
+v = Parameter(parameter_name='v', time_array = time_array, coord_axes=coord_axes_3)
+w = Parameter(parameter_name='w', time_array = time_array, coord_axes=coord_axes_4)
+
 
 #------------------------------------------------------------------------------------------------
 # Transfer values from a netCDF dataset to the Parameter objects...
@@ -172,7 +183,15 @@ v.write_to_disk()
 w.write_to_disk()
 
 
+#------------------------------------------------------------------------------------------------
+# Print the values stored in the meshfunctions, subdomain_func_0 and subdomain_func_1,
+# which store specified values on their respective time domains and 0s for the rest
+# of the time vertices
+#------------------------------------------------------------------------------------------------
 
+print subdomain_func_0.array()
+print subdomain_func_1.array()
 
-
+# print the vertex index for which a particular temp value is valid
+print temp.time_array
 
