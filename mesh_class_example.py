@@ -142,7 +142,7 @@ class TimeDomain(SubDomain):
 
 class Parameter(object):
     '''
-    Connect a variable to a time vertex
+    Reason for having --> Connect a parameter to a time array
     '''
 
     def __init__(self, parameter_name, time_array, coord_axes):
@@ -155,11 +155,10 @@ class Parameter(object):
 
     def create_variable(self):
         self.parameter_handle = MeshFunction("double", self.mesh_topo, 0)
-        return self.parameter_handle
 
     def store_values(self, ds):
         '''
-        Store values for that variable from a dataset
+        Store values for that parameter from a dataset
         '''
         self.values = ds.variables[self.name][0,:,:,:].flatten()
         self.parameter_handle.array()[:] = self.values
@@ -177,7 +176,7 @@ class Parameter(object):
 
 class MeshCoordinateAxes(object):
     '''
-    Connects a coordinate system with a time domain
+    Reason for having --> Connect a coordinate system with a time domain
     '''
     def __init__(self, name, time_domain, time_mesh, ds):
         self.name = name
@@ -205,7 +204,7 @@ class MeshCoordinateAxes(object):
 
     def create_mesh_topo(self, ds):
 
-        # invoking the function below creates a mesh and writes it to a disk also
+        # invoking the function below creates a mesh and also writes it to a disk
         mesh_topo = create_mesh(ds, 'test_data/' + self.make_topo_filename() + '.xml',
                                     topo_dim = 1, geom_dim = 3, 
                                     x_coord = self.x_coord, 
