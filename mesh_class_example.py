@@ -140,13 +140,13 @@ class TimeDomain(SubDomain):
         return True if self.lower_bound <= x[0] and  x[0] <= self.upper_bound else False
 
 
-class Parameter(object):
+class Variable(object):
     '''
     Reason for having --> Connect a parameter to a time array
     '''
 
-    def __init__(self, parameter_name, time_array, coord_axes):
-        self.name = parameter_name
+    def __init__(self, variable_name, time_array, coord_axes):
+        self.name = variable_name
         self.time_array = time_array
         self.time_mesh = coord_axes.time_mesh
         self.mesh_topo = coord_axes.mesh_topo
@@ -154,14 +154,14 @@ class Parameter(object):
         self.create_variable()
 
     def create_variable(self):
-        self.parameter_handle = MeshFunction("double", self.mesh_topo, 1)
+        self.variable_handle = MeshFunction("double", self.mesh_topo, 1)
 
     def store_values(self, ds):
         '''
         Store values for that parameter from a dataset
         '''
         self.values = ds.variables[self.name][0,:,:,:].flatten()
-        self.parameter_handle.array()[:] = self.values
+        self.variable_handle.array()[:] = self.values
 
     def make_meshfunction_filename(self):
         '''
@@ -172,7 +172,7 @@ class Parameter(object):
 
     def write_to_disk(self):
         temp_outfile = File('test_data/' + self.make_meshfunction_filename() + '.xml')
-        temp_outfile << self.parameter_handle
+        temp_outfile << self.variable_handle
 
 class MeshCoordinateAxes(object):
     '''

@@ -5,7 +5,7 @@ from netCDF4 import Dataset
 from dolfin import *
 from pylab import *
 import numpy as np
-from mesh_class_example import MeshExample, TimeMesh, TimeDomain, Parameter, MeshCoordinateAxes
+from mesh_class_example import MeshExample, TimeMesh, TimeDomain, Variable, MeshCoordinateAxes
 
 def get_coord_array(lon_axis="", lat_axis="", z_axis=None):
     x_coords=ds.variables[lon_axis][:]
@@ -132,33 +132,33 @@ coord_axes_4 = MeshCoordinateAxes(  name = 'mesh_topo_4',
 mesh_topo_4 = coord_axes_4.mesh_topo
 
 #------------------------------------------------------------------------------------------------
-# Create Parameter objects which create appropriate mesh functions and connect them with their
+# Create Variable objects which create appropriate mesh functions and connect them with their
 # corresponding time vertices and mesh topologies
 #------------------------------------------------------------------------------------------------
 
-#temp = Parameter(parameter_name='temp', time_vertex_index= 1, coord_axes=coord_axes_1)
-#salt = Parameter(parameter_name='salt', time_vertex_index= 1, coord_axes=coord_axes_1)
-#u = Parameter(parameter_name='u', time_vertex_index= 1, coord_axes=coord_axes_2)
-#v = Parameter(parameter_name='v', time_vertex_index= 1, coord_axes=coord_axes_3)
-#w = Parameter(parameter_name='w', time_vertex_index= 1, coord_axes=coord_axes_4)
+#temp = Variable(variable_name='temp', time_vertex_index= 1, coord_axes=coord_axes_1)
+#salt = Variable(variable_name='salt', time_vertex_index= 1, coord_axes=coord_axes_1)
+#u = Variable(variable_name='u', time_vertex_index= 1, coord_axes=coord_axes_2)
+#v = Variable(variable_name='v', time_vertex_index= 1, coord_axes=coord_axes_3)
+#w = Variable(variable_name='w', time_vertex_index= 1, coord_axes=coord_axes_4)
 
 
 # A parameter is defined over a mesh (a coordinate_axes mesh such as (lon_rho,lat_rho,s_rho))
 # and a sequence of times (this is provided by the time_mesh)
 
-temp = Parameter(parameter_name='temp', time_array = time_array, coord_axes=coord_axes_1)
-salt = Parameter(parameter_name='salt', time_array = time_array, coord_axes=coord_axes_1)
-u = Parameter(parameter_name='u', time_array = time_array, coord_axes=coord_axes_2)
-v = Parameter(parameter_name='v', time_array = time_array, coord_axes=coord_axes_3)
-w = Parameter(parameter_name='w', time_array = time_array, coord_axes=coord_axes_4)
+temp = Variable(variable_name='temp', time_array = time_array, coord_axes=coord_axes_1)
+salt = Variable(variable_name='salt', time_array = time_array, coord_axes=coord_axes_1)
+u = Variable(variable_name='u', time_array = time_array, coord_axes=coord_axes_2)
+v = Variable(variable_name='v', time_array = time_array, coord_axes=coord_axes_3)
+w = Variable(variable_name='w', time_array = time_array, coord_axes=coord_axes_4)
 
 
 #------------------------------------------------------------------------------------------------
-# Transfer values from a netCDF dataset to the Parameter objects...
+# Transfer values from a netCDF dataset to the Variable objects...
 # After transferring, we can access the data transferred using either values attribute of
-# the Parameter object: Parameter.values --> returns a masked array....
-# or from the meshfunction handle of the Parameter object:
-# Parameter.parameter_handle.array() --> returns a numpy array
+# the Variable object: Variable.values --> returns a masked array....
+# or from the meshfunction handle of the Variable object:
+# Variable.variable_handle.array() --> returns a numpy array
 #------------------------------------------------------------------------------------------------
 
 # temp values
