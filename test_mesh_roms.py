@@ -38,8 +38,8 @@ def create_mesh(outfile, topo_dim, geom_dim, x_coord, y_coord, z_coord):
 
     rho_coords, rho_shape = get_coord_array(x_coord, y_coord, z_coord)
 
-    print rho_shape
-    print len(rho_coords)
+    print "shape of mesh: %s" % rho_shape
+    print "number of points in mesh %s" % len(rho_coords)
 
     mesh_example = MeshExample(topo_dim,geom_dim) # topo_dim = 1, geom_dim = 3
     num_vertices = len(rho_coords)
@@ -189,9 +189,12 @@ w.write_to_disk()
 # of the time vertices
 #------------------------------------------------------------------------------------------------
 
-print subdomain_func_0.array()
-print subdomain_func_1.array()
+print "time_array (ocean_time): %s" % time_array
+print "ds.variables['ocean_time'][:] --> %s" % ds.variables['ocean_time'][:]
+
+print "The subdomain function 0 has the following values over its time_mesh: %s" % subdomain_func_0.array()
+print "The subdomain function 0 has the following values over its time_mesh: %s" % subdomain_func_1.array()
 
 # print the vertex index for which a particular temp value is valid
-print temp.time_array
+print "Values associated with parameter, temp (masked array): %s" % temp.values
 

@@ -33,8 +33,8 @@ def create_mesh(ds, outfile, topo_dim, geom_dim, x_coord, y_coord, z_coord):
 
     rho_coords, rho_shape = get_coord_array(ds, x_coord, y_coord, z_coord)
 
-    print rho_shape
-    print len(rho_coords)
+    print "shape of mesh: ", rho_shape
+    print "number of points in mesh: ", len(rho_coords)
 
     mesh_example = MeshExample(topo_dim,geom_dim) # topo_dim = 1, geom_dim = 3
     num_vertices = len(rho_coords)
