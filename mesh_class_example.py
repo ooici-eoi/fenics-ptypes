@@ -154,7 +154,7 @@ class Parameter(object):
         self.create_variable()
 
     def create_variable(self):
-        self.parameter_handle = MeshFunction("double", self.mesh_topo, 0)
+        self.parameter_handle = MeshFunction("double", self.mesh_topo, 1)
 
     def store_values(self, ds):
         '''
