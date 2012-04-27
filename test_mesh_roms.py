@@ -117,14 +117,14 @@ coord_axes_2 = MeshCoordinateAxes(  name = 'mesh_topo_2',
                                     ds = ds)
 mesh_topo_2 = coord_axes_2.mesh_topo
 
-# For mesh (lon_u, lat_u, s_rho)
+# For mesh (lon_v, lat_v, s_rho)
 coord_axes_3 = MeshCoordinateAxes(  name = 'mesh_topo_3',
                                     time_domain = time_domain_0,
                                     time_mesh = time_mesh,
                                     ds = ds)
 mesh_topo_3 = coord_axes_3.mesh_topo
 
-# For mesh (lon_u, lat_u, s_rho)
+# For mesh (lon_rho, lat_rho, s_w)
 coord_axes_4 = MeshCoordinateAxes(  name = 'mesh_topo_4',
                                     time_domain = time_domain_0,
                                     time_mesh = time_mesh,
