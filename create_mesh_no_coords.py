@@ -37,7 +37,7 @@ for c in cells(mesh):
 
 mesh = Mesh()
 editor = MeshEditor()
-editor.open(mesh, 1, 1) # topo_dim = 2, geom dim = 2
+editor.open(mesh, 1, 1) # topo_dim = 1, geom dim = 1
 
 editor.init_vertices(6)
 editor.init_cells(6)
