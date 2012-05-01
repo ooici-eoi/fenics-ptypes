@@ -1,5 +1,5 @@
 from dolfin import *
-
+import numpy
 
 #--------------------------------------------------------------------------------------------
 # One can create a vector.... and also a matrix and a general tensor
@@ -7,6 +7,15 @@ from dolfin import *
 
 # Create a vector of size 10
 x = Vector(10)
+
+# Assigning vlaues to a vector
+
+a = numpy.array([1221, 123.32, 23213, 343,3.34234]) # putting in double because
+v = Vector(a.size)
+v.set_local(a) # this assigns the values to the vector
+
+# To read off the values in v
+print "Values in v:", v.array()
 
 #--------------------------------------------------------------------------------------------
 # One can also create functions on VectorFunctionSpace 's that are vector valued
@@ -26,7 +35,7 @@ editor = MeshEditor()
 editor.open(mesh, 1, 1) # topo_dim = 1, geom dim = 1
 
 editor.init_vertices(6)
-editor.init_cells(6)
+editor.init_cells(3)
 
 
 
@@ -40,8 +49,8 @@ vertex_5 = Vertex(mesh, 5)
 editor.add_cell(0,0,1)
 editor.add_cell(1,1,2)
 editor.add_cell(2,2,3)
-editor.add_cell(3,3,4)
-editor.add_cell(4,4,5)
+#editor.add_cell(3,3,4)
+#editor.add_cell(4,4,5)
 
 
 mesh.order()
@@ -62,6 +71,34 @@ print u.vector().array()
 print inner(w, u)
 
 # this concept of inner product means that w and v are vectors and not scalars
+
+
+
+
+
+
+##---------------------------------------------------------------------------------------
+## This section below does not define vector valued functions
+## Instead it copies the values in stored in a vector, vector.array(), and writes them
+## to all the vertices in the mesh... and so vector.array.size() should be equal to
+## mesh.num_vertices()
+##---------------------------------------------------------------------------------------
+#
+#f = Function(V)
+#
+#vec = f.vector()
+#
+#for i in xrange(a.size):
+#    vec[i] = a[i]
+#
+## or you can do
+#f.vector()[:] = a
+#
+## now we can read off the values assigned to the function
+#
+## using a different handle
+#vec2 = f.vector()
+#print "Values in f: ", vec2.array()
 
 
 
