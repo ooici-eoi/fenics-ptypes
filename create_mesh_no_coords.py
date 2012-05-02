@@ -19,6 +19,7 @@ vertex_5 = Vertex(mesh, 5)
 editor.add_cell(0,1,2,3)
 editor.add_cell(1,0,2,3)
 
+editor.close()
 
 #--------------------------------------------------------------------------------------------
 # Check that the iterators are working
@@ -27,9 +28,9 @@ editor.add_cell(1,0,2,3)
 print "Printing mesh entities by iterating....."
 for c in cells(mesh):
     for v0 in vertices(c):
-        print v0
+        print c, v0
 
-
+"""
 #--------------------------------------------------------------------------------------------
 # Creating another mesh, topo_dim =1, geom_dim = 1
 #--------------------------------------------------------------------------------------------
@@ -65,3 +66,4 @@ print "Printing mesh entities by iterating....."
 for c in cells(mesh):
     for v0 in vertices(c):
         print v0
+"""
