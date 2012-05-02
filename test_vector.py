@@ -10,7 +10,7 @@ x = Vector(10)
 
 # Assigning vlaues to a vector
 
-a = numpy.array([1221, 123.32, 23213, 343,3.34234]) # putting in double because
+a = numpy.array([1221, 123.32, 23213, 343,3.34234, 34.3434]) # putting in double because
 v = Vector(a.size)
 v.set_local(a) # this assigns the values to the vector
 
@@ -72,7 +72,10 @@ print inner(w, u)
 
 # this concept of inner product means that w and v are vectors and not scalars
 
+a = numpy.array([1221, 123.32, 23213, 343,3.34234]) # putting in double because
+w.vector()[:] = a
 
+print w.vector().array()
 
 
 
