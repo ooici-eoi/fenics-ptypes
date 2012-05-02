@@ -8,10 +8,14 @@
 @brief Tag object similar to MOAB for fenics mesh and mesh functions
 """
 
-from dolfin import MeshFunction, Mesh
+from dolfin import MeshFunction, Mesh, MeshEntity
 import numpy
 
 def ion_ehandle(entity):
+    """
+    Handle is an internal concern of tags - it should never be exposed outside the tag.
+    """
+    #@todo handle attribute errors...
     return entity.dim(), entity.index()
 
 
@@ -34,7 +38,7 @@ class IonTag(object):
 
 
     def __setitem__(self, entity, values):
-        assert entity.mesh() is self._mesh, 'Do not put entities from different meshes in the same tag!'
+        assert entity.mesh().id() is self._mesh.id(), 'Do not put entities from different meshes in the same tag!'
         self._entity_values[ion_ehandle(entity)] = self._value_func(values)
 
     def __iter__(self): # real signature unknown; restored from __doc__
@@ -57,7 +61,7 @@ class IonTag(object):
         """ D.iteritems() -> an iterator over the (key, value) items of D """
         for k, v in self._entity_values.iteritems():
             #@todo - how do we get the entity back rather than our handle???
-            yield k, v
+            yield MeshEntity(self._mesh, *k), v
 
 
     def iterkeys(self): # real signature unknown; restored from __doc__
@@ -67,3 +71,18 @@ class IonTag(object):
     def itervalues(self): # real signature unknown; restored from __doc__
         """ D.itervalues() -> an iterator over the values of D """
         pass
+
+
+
+from create_mesh_no_coords import *
+
+t = IonTag('foo',3,'int', mesh)
+
+for v in vertices(mesh):
+    t[v] = [1,2,3]
+
+
+v = MeshEntity(mesh,0,1)
+
+print t[v]
+
