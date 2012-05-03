@@ -28,7 +28,6 @@ class IonTag(object):
         assert(isinstance(size, int))
         assert(size > 0)
         assert(isinstance(mesh, Mesh))
-        assert(mesh is not None)
 
         self._name = name
         self._size = size
