@@ -23,12 +23,18 @@ class IonTag(object):
 
     def __init__(self, name, size, type, mesh):
 
+        #@todo - add exception handling
+        assert(isinstance(name, str))
+        assert(isinstance(size, int))
+        assert(size > 0)
+        assert(isinstance(mesh, Mesh))
+        assert(mesh is not None)
+
         self._name = name
         self._size = size
         self._type = type
         self._mesh = mesh
 
-        #@todo - add exception handling
         #@todo - can we pass/use a memory mapped object?
         self._value_func = lambda x: numpy.fromiter(x, dtype=self._type, count=self._size)
 
@@ -52,11 +58,12 @@ class IonTag(object):
 
     def __delitem__(self, y): # real signature unknown; restored from __doc__
         """ x.__delitem__(y) <==> del x[y] """
-        pass
+        del self._entity_values[y]
 
     def __contains__(self, k): # real signature unknown; restored from __doc__
         """ D.__contains__(k) -> True if D has a key k, else False """
-        return False
+
+        return self._entity_values.has_key(k)
 
     def iteritems(self): # real signature unknown; restored from __doc__
         """ D.iteritems() -> an iterator over the (key, value) items of D """
