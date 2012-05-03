@@ -74,15 +74,15 @@ class IonTag(object):
 
 
 
-from create_mesh_no_coords import *
-
-t = IonTag('foo',3,'int', mesh)
-
-for v in vertices(mesh):
-    t[v] = [1,2,3]
-
-
-v = MeshEntity(mesh,0,1)
-
-print t[v]
+#from create_mesh_no_coords import *
+#
+#t = IonTag('foo',3,'int', mesh)
+#
+#for v in vertices(mesh):
+#    t[v] = [1,2,3]
+#
+#
+#v = MeshEntity(mesh,0,1)
+#
+#print t[v]
 
