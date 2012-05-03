@@ -24,8 +24,6 @@ class TestIonTag(unittest.TestCase):
         editor.init_vertices(6)
         editor.init_cells(2)
 
-
-
         vertex_0 = Vertex(self.mesh, 0)
         vertex_1 = Vertex(self.mesh, 1)
         vertex_2 = Vertex(self.mesh, 2)
@@ -55,12 +53,13 @@ class TestIonTag(unittest.TestCase):
         t = IonTag('foo',3,'int', self.mesh)
 
         for v in vertices(self.mesh):
-            # testing setter
+            # test the setter
             t[v] = values
 
+        # choose an entity in the mesh
         v = MeshEntity(self.mesh,0,1)
 
-        # testing getter
+        # test the getter
         self.assertTrue((t[v] == values).all())
 
         #---------------------------------------------------------------------------------------
@@ -73,6 +72,7 @@ class TestIonTag(unittest.TestCase):
         # check that tag has the entity, v, in it
         self.assertTrue(t._entity_values.has_key(entity_tuple))
 
+        # delete a tag entry for an entity
         del t[entity_tuple]
 
         # check that the tag no longer has the entity, v, in it
@@ -97,10 +97,12 @@ class TestIonTag(unittest.TestCase):
 
         t = IonTag('foo',3,'int', self.mesh)
 
+        # we create a tag entry for every vertex of the mesh
         for v in vertices(self.mesh):
             # testing setter
             t[v] = [1,2,3]
 
+        # we check that the number of tag entries is the same as the number we created
         self.assertEqual(len(t), self.mesh.num_vertices())
 
 
