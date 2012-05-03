@@ -42,7 +42,7 @@ class TestIonTag(unittest.TestCase):
 
     def test_init(self):
         # test possible arguments and failure cases...
-
+        #@todo implement the test once we have exception handling in the init method
 
 
         pass
@@ -64,33 +64,61 @@ class TestIonTag(unittest.TestCase):
 
         #@todo: test delete: delete is not yet implemented in tag
 
+        #@todo: test by adding less values compared to the size and also more values
 
     def test_types(self):
         # test with different types:
 
+        #---------------------------------------------------------------------------------------
         # Ints
+        #---------------------------------------------------------------------------------------
+
         t = IonTag('foo',3,'int', self.mesh)
         self.assertEqual(t._type, 'int')
 
+        #---------------------------------------------------------------------------------------
         # Floats
+        #---------------------------------------------------------------------------------------
+
         t = IonTag('foo',3,'float', self.mesh)
         self.assertEqual(t._type, 'float')
 
+        # Add some int values to the tag, and check if they are converted to
+        # float tag values
 
+        values = [1,2,3] # a list of int values
+        v = MeshEntity(self.mesh,0,1)
+        t[v] = values
+
+        for key, item in t.iteritems():
+            for num in item:
+                self.assertTrue(isinstance(num, float))
+
+        #---------------------------------------------------------------------------------------
         # Complex
+        #---------------------------------------------------------------------------------------
+
         t = IonTag('foo',3,'complex', self.mesh)
         self.assertEqual(t._type, 'complex')
 
+        #---------------------------------------------------------------------------------------
         # String
+        #---------------------------------------------------------------------------------------
+
         t = IonTag('foo',3,'string', self.mesh)
         self.assertEqual(t._type, 'string')
 
+        #---------------------------------------------------------------------------------------
         # User defined
+        #---------------------------------------------------------------------------------------
 
         # t = IonTag('foo',3,'user_defined', self.mesh)
 #        self.assertEqual(t._type, 'user_defined')
 
+        #---------------------------------------------------------------------------------------
         # Object
+        #---------------------------------------------------------------------------------------
+
         t = IonTag('foo',3,'object', self.mesh)
         self.assertEqual(t._type, 'object')
 
@@ -104,14 +132,8 @@ class TestIonTag(unittest.TestCase):
 
         t = IonTag('foo',1,'int', self.mesh)
 
-        val = []
-        x = 1
-
-        for v in vertices(self.mesh):
-            val.append(x)
-            t[v] = val
-            val.pop()
-            x += 1
+        for x,v in enumerate(vertices(self.mesh)):
+            t[v] = (x,)
 
         #------------------------------------------------------------
         # Test the iteration over the tags
@@ -119,6 +141,8 @@ class TestIonTag(unittest.TestCase):
 
         for key, item in t.iteritems():
             self.assertEqual(t[ key ], item  )
+            self.assertTrue(isinstance(key, MeshEntity))
+            self.assertTrue(isinstance(item[0], int ))
 
 
     def test_properties(self):
