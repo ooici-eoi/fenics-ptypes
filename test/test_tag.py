@@ -10,30 +10,29 @@
 
 
 
-from tag import IonTag, ion_ehandle
+from tag import IonTag
 import unittest
-from create_mesh_no_coords import *
-from dolfin import MeshFunction, Mesh, MeshEntity
+from dolfin import MeshFunction, Mesh, MeshEntity, MeshEditor, Vertex, vertices
 
 class TestIonTag(unittest.TestCase):
 
     def setUp(self, *args, **kwargs):
         self.mesh = Mesh()
         editor = MeshEditor()
-        editor.open(mesh, 2, 2) # topo_dim = 2, geom dim = 2
+        editor.open(self.mesh, 2, 2) # topo_dim = 2, geom dim = 2
 
         editor.init_vertices(6)
         editor.init_cells(2)
 
 
 
-        vertex_0 = Vertex(mesh, 0)
-        vertex_1 = Vertex(mesh, 1)
-        vertex_2 = Vertex(mesh, 2)
-        vertex_3 = Vertex(mesh, 3)
+        vertex_0 = Vertex(self.mesh, 0)
+        vertex_1 = Vertex(self.mesh, 1)
+        vertex_2 = Vertex(self.mesh, 2)
+        vertex_3 = Vertex(self.mesh, 3)
 
-        vertex_4 = Vertex(mesh, 4)
-        vertex_5 = Vertex(mesh, 5)
+        vertex_4 = Vertex(self.mesh, 4)
+        vertex_5 = Vertex(self.mesh, 5)
 
         editor.add_cell(0,1,2,3)
         editor.add_cell(1,0,2,3)
@@ -48,7 +47,6 @@ class TestIonTag(unittest.TestCase):
 
         pass
 
-
     def test_get_set_del(self):
         #Test the getter, setter and delete method
 
@@ -62,7 +60,7 @@ class TestIonTag(unittest.TestCase):
         t[v] = values
 
         # testing getter
-        self.assertEqual(t[v], values)
+        self.assertTrue((t[v] == values).all())
 
         #@todo: test delete: delete is not yet implemented in tag
 
@@ -72,35 +70,61 @@ class TestIonTag(unittest.TestCase):
 
         # Ints
         t = IonTag('foo',3,'int', self.mesh)
-
+        self.assertEqual(t._type, 'int')
 
         # Floats
         t = IonTag('foo',3,'float', self.mesh)
+        self.assertEqual(t._type, 'float')
+
 
         # Complex
         t = IonTag('foo',3,'complex', self.mesh)
+        self.assertEqual(t._type, 'complex')
 
         # String
         t = IonTag('foo',3,'string', self.mesh)
+        self.assertEqual(t._type, 'string')
 
         # User defined
 
         # t = IonTag('foo',3,'user_defined', self.mesh)
+#        self.assertEqual(t._type, 'user_defined')
 
         # Object
         t = IonTag('foo',3,'object', self.mesh)
+        self.assertEqual(t._type, 'object')
 
 
     def test_iter(self):
         # test the iterator and verify that the correct type is passed back
 
+        #------------------------------------------------------------
+        # Initial step: Feed in values to the vertices in the mesh
+        #------------------------------------------------------------
 
-        pass
+        t = IonTag('foo',1,'int', self.mesh)
+
+        val = []
+        x = 1
+
+        for v in vertices(self.mesh):
+            val.append(x)
+            t[v] = val
+            val.pop()
+            x += 1
+
+        #------------------------------------------------------------
+        # Test the iteration over the tags
+        #------------------------------------------------------------
+
+        for key, item in t.iteritems():
+            self.assertEqual(t[ key ], item  )
 
 
     def test_properties(self):
         # contains, len etc...
         pass
 
-
+if __name__ == '__main__':
+    unittest.main()
 
