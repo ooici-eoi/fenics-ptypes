@@ -54,7 +54,7 @@ class IonTag(object):
 
     def __len__(self): # real signature unknown; restored from __doc__
         """ x.__len__() <==> len(x) """
-        pass
+        return len(dict)
 
     def __delitem__(self, y): # real signature unknown; restored from __doc__
         """ x.__delitem__(y) <==> del x[y] """
