@@ -56,7 +56,7 @@ class TestIonTag(unittest.TestCase):
 
         for v in vertices(self.mesh):
             # testing setter
-            t[v] = [1,2,3]
+            t[v] = values
 
         v = MeshEntity(self.mesh,0,1)
 
@@ -73,7 +73,7 @@ class TestIonTag(unittest.TestCase):
         # check that tag has the entity, v, in it
         self.assertTrue(t._entity_values.has_key(entity_tuple))
 
-        del t._entity_values[entity_tuple]
+        del t[entity_tuple]
 
         # check that the tag no longer has the entity, v, in it
         self.assertFalse(t._entity_values.has_key(entity_tuple))
@@ -93,6 +93,56 @@ class TestIonTag(unittest.TestCase):
 #        with self.assertRaises(ValueError):
 #            t[v] = values
 
+    def test_len(self):
+
+        t = IonTag('foo',3,'int', self.mesh)
+
+        for v in vertices(self.mesh):
+            # testing setter
+            t[v] = [1,2,3]
+
+        self.assertEqual(len(t), self.mesh.num_vertices())
+
+
+    def test_contains(self):
+
+        values = [1,2,3]
+
+        t = IonTag('foo',3,'int', self.mesh)
+
+        for v in vertices(self.mesh):
+            # testing setter
+            t[v] = values
+
+        v = MeshEntity(self.mesh,0,1)
+
+        # testing getter
+        self.assertTrue((t[v] == values).all())
+
+        #---------------------------------------------------------------------------------------
+        # Delete a tag entry (for an entity)
+        #---------------------------------------------------------------------------------------
+
+        # choose an entity to delete
+        entity_tuple = (v.dim(),v.index())
+
+        # check that tag has the entity, v, in it
+        self.assertTrue(t.__contains__(entity_tuple))
+
+        del t._entity_values[entity_tuple]
+
+        # check that the tag no longer has the entity, v, in it
+        self.assertFalse(t.__contains__(entity_tuple))
+
+        #@todo: test by adding less values compared to the size and also more values
+
+        #---------------------------------------------------------------------------------------
+        # Add less number of values that the size
+        #---------------------------------------------------------------------------------------
+
+        values = [1]
+        t = IonTag('foo',3,'int', self.mesh)
+        v = MeshEntity(self.mesh,0,1)
 
 
 
