@@ -54,15 +54,29 @@ class TestIonTag(unittest.TestCase):
 
         t = IonTag('foo',3,'int', self.mesh)
 
-        v = MeshEntity(self.mesh,0,1)
+        for v in vertices(self.mesh):
+            # testing setter
+            t[v] = [1,2,3]
 
-        # testing setter
-        t[v] = values
+        v = MeshEntity(self.mesh,0,1)
 
         # testing getter
         self.assertTrue((t[v] == values).all())
 
-        #@todo: test delete: delete is not yet implemented in tag
+        #---------------------------------------------------------------------------------------
+        # Check delete of a tag entry (for an entity)
+        #---------------------------------------------------------------------------------------
+
+        # choose an entity to delete
+        entity_tuple = (v.dim(),v.index())
+
+        # check that tag has the entity, v, in it
+        self.assertTrue(t._entity_values.has_key(entity_tuple))
+
+        del t._entity_values[entity_tuple]
+
+        # check that the tag no longer has the entity, v, in it
+        self.assertFalse(t._entity_values.has_key(entity_tuple))
 
         #@todo: test by adding less values compared to the size and also more values
 
