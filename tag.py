@@ -67,11 +67,15 @@ class IonTag(object):
 
     def iterkeys(self): # real signature unknown; restored from __doc__
         """ D.iterkeys() -> an iterator over the keys of D """
-        pass
+        for k, v in self._entity_values.iteritems():
+            #@todo - how do we get the entity back rather than our handle???
+            yield MeshEntity(self._mesh, *k)
 
     def itervalues(self): # real signature unknown; restored from __doc__
         """ D.itervalues() -> an iterator over the values of D """
-        pass
+        for k, v in self._entity_values.iteritems():
+            #@todo - how do we get the entity back rather than our handle???
+            yield v
 
 
 
