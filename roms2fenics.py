@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+__author__ = 'SChatterjee'
+
 
 from netCDF4 import Dataset
 import numpy as np

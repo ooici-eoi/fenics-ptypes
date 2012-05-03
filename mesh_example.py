@@ -1,3 +1,4 @@
+__author__ = 'SChatterjee'
 
 from dolfin import *
 import numpy as np

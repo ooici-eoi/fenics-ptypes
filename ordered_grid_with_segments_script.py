@@ -1,3 +1,4 @@
+__author__ = 'SChatterjee'
 
 from dolfin import *
 from ordered_grid_with_segments import MeshExample

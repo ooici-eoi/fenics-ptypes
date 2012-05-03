@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+__author__ = 'SChatterjee'
 
 from netCDF4 import Dataset
 from dolfin import *

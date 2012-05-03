@@ -1,3 +1,5 @@
+__author__ = 'SChatterjee'
+
 from dolfin import *
 mesh = Mesh()
 editor = MeshEditor()
