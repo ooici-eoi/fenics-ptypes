@@ -28,6 +28,7 @@ class IonTag(object):
         self._type = type
         self._mesh = mesh
 
+        #@todo - add exception handling
         #@todo - can we pass/use a memory mapped object?
         self._value_func = lambda x: numpy.fromiter(x, dtype=self._type, count=self._size)
 
