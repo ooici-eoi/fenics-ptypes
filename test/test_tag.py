@@ -66,6 +66,22 @@ class TestIonTag(unittest.TestCase):
 
         #@todo: test by adding less values compared to the size and also more values
 
+        #---------------------------------------------------------------------------------------
+        # Add less number of values that the size
+        #---------------------------------------------------------------------------------------
+
+        values = [1]
+        t = IonTag('foo',3,'int', self.mesh)
+        v = MeshEntity(self.mesh,0,1)
+
+        #@todo check to see why self.assertRaises is not working for unittest:
+
+#        with self.assertRaises(ValueError):
+#            t[v] = values
+
+
+
+
     def test_types(self):
         # test with different types:
 
