@@ -35,6 +35,7 @@ class IonTag(object):
         self._mesh = mesh
 
         #@todo - can we pass/use a memory mapped object?
+        # @todo (comment) - numpy iterator cannot handle strings and object data types
         self._value_func = lambda x: numpy.fromiter(x, dtype=self._type, count=self._size)
 
         self._entity_values={}
