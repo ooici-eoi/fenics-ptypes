@@ -78,8 +78,6 @@ class TestIonTag(unittest.TestCase):
         # check that the tag no longer has the entity, v, in it
         self.assertFalse(t._entity_values.has_key(entity_tuple))
 
-        #@todo: test by adding less values compared to the size and also more values
-
         #---------------------------------------------------------------------------------------
         # Add less number of values that the size
         #---------------------------------------------------------------------------------------
@@ -92,6 +90,20 @@ class TestIonTag(unittest.TestCase):
 
 #        with self.assertRaises(ValueError):
 #            t[v] = values
+
+        #---------------------------------------------------------------------------------------
+        # Add more number of values that the size
+        #---------------------------------------------------------------------------------------
+
+        values = [1,2,3,4]
+        size = 2
+        t = IonTag('foo',size,'int', self.mesh)
+        v = MeshEntity(self.mesh,0,1)
+
+        t[v] = values
+
+        for key, value in t.iteritems():
+            self.assertEqual(len(value), size)
 
     def test_len(self):
 
@@ -135,18 +147,6 @@ class TestIonTag(unittest.TestCase):
 
         # check that the tag no longer has the entity, v, in it
         self.assertFalse(t.__contains__(entity_tuple))
-
-        #@todo: test by adding less values compared to the size and also more values
-
-        #---------------------------------------------------------------------------------------
-        # Add less number of values that the size
-        #---------------------------------------------------------------------------------------
-
-        values = [1]
-        t = IonTag('foo',3,'int', self.mesh)
-        v = MeshEntity(self.mesh,0,1)
-
-
 
     def test_types(self):
         # test with different types:
