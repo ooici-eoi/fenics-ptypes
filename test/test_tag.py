@@ -148,6 +148,7 @@ class TestIonTag(unittest.TestCase):
 
     def test_types(self):
         # test with different types:
+        #@todo for each type check that input is cast to type
 
         #---------------------------------------------------------------------------------------
         # Ints

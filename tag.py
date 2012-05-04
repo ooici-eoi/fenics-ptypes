@@ -8,7 +8,7 @@
 @brief Tag object similar to MOAB for fenics mesh and mesh functions
 """
 
-from dolfin import MeshFunction, Mesh, MeshEntity
+from dolfin import MeshFunction, Mesh, MeshEntity, MeshEditor, Vertex, Cell, vertices, cells
 import numpy
 
 def ion_ehandle(entity):
@@ -46,6 +46,7 @@ class IonTag(object):
 
     def __setitem__(self, entity, values):
         assert entity.mesh().id() is self._mesh.id(), 'Do not put entities from different meshes in the same tag!'
+        #@todo - check the length what should we do if it doesn't match?
         self._entity_values[ion_ehandle(entity)] = self._value_func(values)
 
     def __iter__(self): # real signature unknown; restored from __doc__
@@ -74,27 +75,49 @@ class IonTag(object):
 
     def iterkeys(self): # real signature unknown; restored from __doc__
         """ D.iterkeys() -> an iterator over the keys of D """
-        for k, v in self._entity_values.iteritems():
+        for k in self._entity_values.iterkeys():
             #@todo - how do we get the entity back rather than our handle???
             yield MeshEntity(self._mesh, *k)
 
     def itervalues(self): # real signature unknown; restored from __doc__
         """ D.itervalues() -> an iterator over the values of D """
-        for k, v in self._entity_values.iteritems():
+        for v in self._entity_values.itervalues():
             #@todo - how do we get the entity back rather than our handle???
             yield v
 
 
+mesh = Mesh()
+editor = MeshEditor()
+editor.open(mesh, 2, 2) # topo_dim = 2, geom dim = 2
 
-#from create_mesh_no_coords import *
-#
-#t = IonTag('foo',3,'int', mesh)
-#
-#for v in vertices(mesh):
-#    t[v] = [1,2,3]
-#
-#
-#v = MeshEntity(mesh,0,1)
-#
-#print t[v]
+editor.init_vertices(6)
+editor.init_cells(2)
+
+vertex_0 = Vertex(mesh, 0)
+vertex_1 = Vertex(mesh, 1)
+vertex_2 = Vertex(mesh, 2)
+vertex_3 = Vertex(mesh, 3)
+
+vertex_4 = Vertex(mesh, 4)
+vertex_5 = Vertex(mesh, 5)
+
+editor.add_cell(0,1,2,3)
+editor.add_cell(1,0,2,3)
+
+editor.close()
+
+
+t = IonTag('foo',3,'int', mesh)
+
+for v in vertices(mesh):
+    t[v] = [1,2,3]
+
+for c in cells(mesh):
+    t[c] = [4,5,6,7]
+
+
+
+v = MeshEntity(mesh,0,1)
+
+print t[v]
 
