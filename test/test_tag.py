@@ -24,8 +24,6 @@ class TestIonTag(unittest.TestCase):
         editor.init_vertices(6)
         editor.init_cells(2)
 
-
-
         vertex_0 = Vertex(self.mesh, 0)
         vertex_1 = Vertex(self.mesh, 1)
         vertex_2 = Vertex(self.mesh, 2)
@@ -55,12 +53,13 @@ class TestIonTag(unittest.TestCase):
         t = IonTag('foo',3,'int', self.mesh)
 
         for v in vertices(self.mesh):
-            # testing setter
+            # test the setter
             t[v] = values
 
+        # choose an entity in the mesh
         v = MeshEntity(self.mesh,0,1)
 
-        # testing getter
+        # test the getter
         self.assertTrue((t[v] == values).all())
 
         #---------------------------------------------------------------------------------------
@@ -73,15 +72,14 @@ class TestIonTag(unittest.TestCase):
         # check that tag has the entity, v, in it
         self.assertTrue(t._entity_values.has_key(entity_tuple))
 
+        # delete a tag entry for an entity
         del t[entity_tuple]
 
         # check that the tag no longer has the entity, v, in it
         self.assertFalse(t._entity_values.has_key(entity_tuple))
 
-        #@todo: test by adding less values compared to the size and also more values
-
         #---------------------------------------------------------------------------------------
-        # Add less number of values that the size
+        # Add less number of values than the size defined in the tag object
         #---------------------------------------------------------------------------------------
 
         values = [1]
@@ -93,14 +91,37 @@ class TestIonTag(unittest.TestCase):
 #        with self.assertRaises(ValueError):
 #            t[v] = values
 
+        try:
+            t[v] = values
+        except ValueError:
+            pass
+        else:
+            raise AssertionError('A Value Error should have been raised!')
+
+        #---------------------------------------------------------------------------------------
+        # Add more number of values that the size defined in the tag object
+        #---------------------------------------------------------------------------------------
+
+        values = [1,2,3,4]
+        size = 2
+        t = IonTag('foo',size,'int', self.mesh)
+        v = MeshEntity(self.mesh,0,1)
+
+        t[v] = values
+
+        for key, value in t.iteritems():
+            self.assertEqual(len(value), size)
+
     def test_len(self):
 
         t = IonTag('foo',3,'int', self.mesh)
 
+        # we create a tag entry for every vertex of the mesh
         for v in vertices(self.mesh):
             # testing setter
             t[v] = [1,2,3]
 
+        # we check that the number of tag entries is the same as the number we created
         self.assertEqual(len(t), self.mesh.num_vertices())
 
 
@@ -134,17 +155,16 @@ class TestIonTag(unittest.TestCase):
         # check that the tag no longer has the entity, v, in it
         self.assertFalse(t.__contains__(entity_tuple))
 
-        #@todo: test by adding less values compared to the size and also more values
+    def test_len(self):
 
-        #---------------------------------------------------------------------------------------
-        # Add less number of values that the size
-        #---------------------------------------------------------------------------------------
+        # Initial step: Feed in values to the vertices in the mesh
+        t = IonTag('foo',1,'int', self.mesh)
 
-        values = [1]
-        t = IonTag('foo',3,'int', self.mesh)
-        v = MeshEntity(self.mesh,0,1)
+        for x,v in enumerate(vertices(self.mesh)):
+            t[v] = (x,)
 
-
+        # test len
+        self.assertEqual(len(t), self.mesh.num_vertices())
 
     def test_types(self):
         # test with different types:
@@ -228,6 +248,7 @@ class TestIonTag(unittest.TestCase):
 
     def test_properties(self):
         # contains, len etc...
+        #@todo may be we can remove this test method as the contains() and len() methods have their own separate test methods
         pass
 
 if __name__ == '__main__':
