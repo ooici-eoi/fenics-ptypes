@@ -79,7 +79,7 @@ class TestIonTag(unittest.TestCase):
         self.assertFalse(t._entity_values.has_key(entity_tuple))
 
         #---------------------------------------------------------------------------------------
-        # Add less number of values that the size
+        # Add less number of values than the size defined in the tag object
         #---------------------------------------------------------------------------------------
 
         values = [1]
@@ -91,8 +91,15 @@ class TestIonTag(unittest.TestCase):
 #        with self.assertRaises(ValueError):
 #            t[v] = values
 
+        try:
+            t[v] = values
+        except ValueError:
+            pass
+        else:
+            raise AssertionError('A Value Error should have been raised!')
+
         #---------------------------------------------------------------------------------------
-        # Add more number of values that the size
+        # Add more number of values that the size defined in the tag object
         #---------------------------------------------------------------------------------------
 
         values = [1,2,3,4]
@@ -147,6 +154,17 @@ class TestIonTag(unittest.TestCase):
 
         # check that the tag no longer has the entity, v, in it
         self.assertFalse(t.__contains__(entity_tuple))
+
+    def test_len(self):
+
+        # Initial step: Feed in values to the vertices in the mesh
+        t = IonTag('foo',1,'int', self.mesh)
+
+        for x,v in enumerate(vertices(self.mesh)):
+            t[v] = (x,)
+
+        # test len
+        self.assertEqual(len(t), self.mesh.num_vertices())
 
     def test_types(self):
         # test with different types:
@@ -229,6 +247,7 @@ class TestIonTag(unittest.TestCase):
 
     def test_properties(self):
         # contains, len etc...
+        #@todo may be we can remove this test method as the contains() and len() methods have their own separate test methods
         pass
 
 if __name__ == '__main__':
